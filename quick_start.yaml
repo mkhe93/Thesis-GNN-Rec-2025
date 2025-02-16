@@ -1,0 +1,116 @@
+# Model and Dataset
+field_separator: "\t"
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+TIME_FIELD: timestamp
+user_inter_num_interval: "[20,inf)"
+load_col:
+    inter: [user_id, item_id, timestamp]
+
+# Evaluation
+eval_args:
+  #split: {'LK': ['test_only', 10]}   # (dict) The splitting strategy ranging in ['RS','LS'].{'RS':[0.8,0.1,0.1]}, valid_and_test, test_only, valid_only
+  #split: { 'LS': 'test_only' }   # (dict) The splitting strategy ranging in ['RS','LS'].{'RS':[0.8,0.1,0.1]}
+  split: { 'RS':[0.7,0.1,0.2] }   # (dict) The splitting strategy ranging in ['RS','LS'].{'RS':[0.8,0.1,0.1]}
+  group_by: user                # (str) The grouping strategy ranging in ['user', 'none'].
+  order: RO                     # (str) The ordering strategy ranging in ['RO', 'TO'].
+  mode: full
+
+# Permanent
+shuffle: False
+eval_batch_size: 2048
+train_batch_size: 2048
+learner: adam
+save_step: 5
+show_progress: True
+valid_metric: "ndcg@10"
+eval_step: 5
+stopping_step: 10
+epochs: 100
+
+# often shared parameters
+embedding_size: 64
+n_layers: 2
+reg_weight: 1e-05
+learning_rate: 0.01
+
+
+#train_neg_sample_args: ~
+
+train_neg_sample_args:          # (dict) Negative sampling configuration for model training.
+  distribution: uniform         # (str) The distribution of negative items.
+  sample_num: 1                 # (int) The sampled num of negative items.
+  alpha: 1.0                    # (float) The power of sampling probability for popularity distribution.
+  dynamic: False                # (bool) Whether to use dynamic negative sampling.
+  candidate_num: 1              # (int) The number of candidate negative items when dynamic negative sampling.
+repeatable: False
+topUser: 10
+
+########## Optimal Settings for Models ###########
+#### For AsymUserkNN
+#knn_method: 'user'
+#alpha: 0.5
+#beta: 0.5
+#k: 500
+#q: 3
+
+#### For AsymItemkNN
+#knn_method: 'item'
+#alpha: 0.4
+#beta: 0.6
+#k: 60
+#q: 1
+
+#### For LightGCN
+#epochs: 200
+#embedding_size: 64
+#n_layers: 4
+#learning_rate: 0.01
+#reg_weight: 0.0001
+
+#### For UltraGCN
+#epochs: 150
+#embedding_size: 64
+#learning_rate: 0.001
+lambda: 0.05
+gamma: 0.0001
+ii_neighbor_num: 10
+initial_weight: 0.0001
+negative_num: 500
+negative_weight: 200
+w1: 0.000001
+w2: 1.0
+w3: 0.00001
+w4: 1.0
+
+#### For ALS
+#embedding_size: 96
+#epochs: 50
+#regularization: 0.08
+#alpha: 2.75
+
+#### For BPR
+#embedding_size: 1024
+#epochs: 150
+#learning_rate: 0.0004
+
+#### For SGL
+#epochs: 90
+#embedding_size: 64
+#n_layers: 4
+#learning_rate: 0.005
+#reg_weight: 0.00001
+#drop_ratio: 0.3
+#ssl_tau: 0.2
+#ssl_weight: 0.05
+
+#### For XSimGCL
+#epochs: 125
+#embedding_size: 64
+#n_layers: 3
+#learning_rate: 0.002
+#reg_weight: 0.0000010
+#eps: 0.5
+#lambda: 0.1
+#temperature: 0.2
+#layer_cl: 1
